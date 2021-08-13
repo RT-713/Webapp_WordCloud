@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--Bootstrapのインポート-->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>WordCloud TOP</title>
+    </head>
+    <body>
+        <div class="flash_message">
+            {% for message in get_flashed_messages() %}
+                <br>
+                <p style="background-color: lightgreen;">
+                <b>{{ message }}</b></p>
+            {% endfor %}
+        </div>
+        <br>
+        <h2>WordCloud作成ページ</h2>
+        <p>このページでは以下の２種類の方法でWordCloudを簡単に作成して保存することができます．</p>
+        <br>
+        <h5><a href="/upload">　①テキストファイルからWordCloudを作成</a></h5>
+        <br>
+        <h5><a href="/paste">　②テキスト入力でWordCloudを作成</a></h5>
+        <br>
+        <table border="2" bordercolor="#000000" width="70%" cellpadding="5">
+            <tr align="center" bgcolor="lightblue">
+                <th>　No　</th>
+                <th>　作成日　</th>
+                <th>　タイトル　</th>
+                <th>　作成ファイル　</th>
+                <th>　ダウンロード　</th>
+                <th>　削除　</th>
+            </tr>
+            {% for i in registration_data %}
+                <tr align="center">
+                    <td>{{ i.id }}</td>
+                    <td>{{ i.date.strftime('%Y年%m月%d日') }}</td>
+                    <td>{{ i.title }}</td>
+                    <td>{{ i.file_path }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('download', file_path=i.file_path)}}">
+                            <input value="ダウンロード" type="submit" name="download" style="background: green;color:white">
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('delete', id=i.id)}}">
+                            <input value="削除" type="submit" name="delete" style="background: darkkhaki;color:white">
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <p>登録されているデータがありません</p>
+            {% endfor %}
+        </table>
+        <br>
+    </body>
+</html>
